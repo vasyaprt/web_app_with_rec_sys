@@ -1,0 +1,48 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+    Каталог экскурсий
+{% endblock %}
+{% block content-cont %}
+
+{% endblock %}
+{% block content %}
+
+    {% for el in tours %}
+
+        <div class="alert alert-secondary border border-dark">
+
+            <div class="container">
+
+                <div class="row">
+
+                    <div class="col-md-auto">
+                        <img src="{{ el.get_thumbnail }}" alt="" >
+                    </div>
+                    <div class="col-md-8">
+                        <a href="{{ el.get_absolute_url }}" class="link-dark">
+                            <h4>{{ el.title }}</h4>
+                        </a>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-star"></i>
+                                Рейтинг:
+                                {% if el.get_rating == 0 %}Пока нет оценок{% else %}
+                                    {{ el.get_rating|floatformat:1 }}{% endif %}</li>
+                            <li>
+                                <i class="fas fa-ruble-sign"></i>
+                                Цена:
+                                {{ el.price }} руб.
+                            </li>
+
+                        </ul>
+                        <p class="font-weight-light">{{ el.description |truncatewords:40 }}</p>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    {% endfor %}
+
+{% endblock %}

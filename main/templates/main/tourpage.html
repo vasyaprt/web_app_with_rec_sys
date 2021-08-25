@@ -1,0 +1,165 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ tour.title }}
+{% endblock %}
+
+{% block content %}
+ <div class="modal fade" id="create-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+
+            <img class="img-fluid" alt="" src="/media/{{ tour.image }}">
+
+        </div>
+        <div class="col-md-6">
+            <h1>{{ tour.title }}</h1>
+            <div>
+                <table class="table table-hover">
+                    <tbody>
+                    <tr>
+                        <td><i class="fas fa-star"></i></td>
+                        <td>Рейтинг:</td>
+                        <td>{% if tour.get_rating == 0 %}Пока нет оценок{% else %}
+                            {{ tour.get_rating|floatformat:1 }}{% endif %}</td>
+                    </tr>
+                    <tr>
+
+                        <td><i class="fas fa-portrait"></i></td>
+                        <td>Гид:</td>
+                        <td><a href="{{ tour.get_guide }}" class="link-dark">{{ tour.guide }}</a></td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-suitcase-rolling"></i></td>
+                        <td>Передвижение:</td>
+                        <td>{{ tour.type }}</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-user-friends"></i></td>
+                        <td>Cостав:</td>
+                        <td>{{ tour.group }}</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-clock"></i></td>
+                        <td>Продолжитльность:</td>
+                        <td>{{ tour.duration }}</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-ruble-sign"></i></td>
+                        <td>Цена:</td>
+                        <td>{{ tour.price }} руб.</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                {% if request.user.is_authenticated %}
+
+                    <button  id="create-book" class="button btn btn-outline-primary">Забронировать</button>
+
+                {% else %}
+
+                    <a href="{% url 'login' %}">Войдите чтобы забронировать!</a>
+
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <br>
+
+    <p>{{ tour.description }}</p>
+
+    {% if request.user.is_authenticated %}
+
+        {% if update %}
+            <hr>
+            <form method="post" action=".">
+                {% csrf_token %}
+
+                <h3><label>Будем рады вашей оценке!</label></h3>
+                <div class="row">
+                    <div class="col-md-auto">
+                        <select name="stars" class="form-select">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <button class="btn btn-outline-primary">Отправить</button>
+                    </div>
+                </div>
+
+            </form>
+            <hr>
+
+        {% endif %}
+
+    {% endif %}
+
+    {% if request.user.is_authenticated %}
+
+        <h2>Рекомендации</h2>
+        <br>
+        <div class="row" >
+            {% for el in tour_list %}
+                <div class="col-md-4">
+                    <div class="card" style="width: 25rem;">
+                        <img src="{{ el.get_thumbnail }}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ el.title }}</h5>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-star"></i>
+                                    Рейтинг:
+                                    {% if el.get_rating == 0 %}Пока нет оценок{% else %}
+                                        {{ el.get_rating|floatformat:1 }}{% endif %}</li>
+                                <li>
+                                    <i class="fas fa-ruble-sign"></i>
+                                    Цена:
+                                    {{ el.price }} руб.
+                                </li>
+
+                            </ul>
+                            <p class="card-text ">{{ el.description|truncatewords:15 }}</p>
+
+                            <a href="{{ el.get_absolute_url }}" class="btn btn-primary">Читать далее</a>
+                        </div>
+                    </div>
+                    <br>
+
+                </div>
+                <br>
+            {% endfor %}
+        </div>
+        <br>
+        <br>
+        <br>
+    {% endif %}
+<script src="{% static 'js/jquery-3.6.0.js'%}" ></script>
+<script src="{% static 'js/bootstrap.js'%}" ></script>
+<script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
+
+  <script type="text/javascript">
+    $(function () {
+
+         $("#create-book").modalForm({
+        formURL: "{% url 'order' id=tour.id  %}",
+             modalID: "#create-modal"
+
+    });})
+    $("#msg").fadeTo(2000, 500).slideUp(500, function(){
+        $("#msg").slideUp(500);
+      });
+    </script>
+
+{% endblock %}
+<!---i-->

@@ -1,0 +1,29 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}
+{{ guide.name }}
+{% endblock  %}
+
+{% block content %}
+     <div class="row" >
+        <div class="col-md-3">
+
+            <img class="img-fluid" alt="" src="/media/{{ guide.img}}">
+
+        </div>
+        <div class="col-md-6">
+            <h1>{{ guide.name }}</h1>
+            <ul class="list-unstyled">
+                <li> <i class="fas fa-at"></i>
+                    Email:
+                    {{ guide.email }}</li>
+
+                <li> <i class="far fa-address-card"></i>
+                    "О себе"
+                    {{ guide.description }}</li>
+            </ul>
+
+            </div>
+        </div>
+{% endblock %}
